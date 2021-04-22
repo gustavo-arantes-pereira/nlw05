@@ -1,8 +1,13 @@
 import { request, response, Router } from "express";
-import { getCustomRepository } from "typeorm";
-import { SettingsRepository } from "./repositories/SettingsRepositories";
+import { MessagesController } from "./controllers/MessagesController";
+import { SettingsController } from "./controllers/SettingsControllers";
+import { UsersController } from "./controllers/UsersController";
 
 const routes = Router();
+
+const settingsController = new SettingsController;
+const usersController = new UsersController;
+const messagesController = new MessagesController;
 
 /**
  * Tipos de Parâmetros:
@@ -17,18 +22,11 @@ const routes = Router();
  * {}
  */
 
-routes.post("/settings", async (request, response) => {
-    const { chat, username } = request.body;
-    const settingsRepository = getCustomRepository(SettingsRepository);
+routes.post("/settings", settingsController.create);
 
-    const settings = settingsRepository.create({
-        chat,
-        username
-    })
+routes.post("/users", usersController.create);
 
-    await settingsRepository.save(settings);
-
-    return response.json(settings);
-});
+routes.post("/messages", messagesController.create);
+routes.get("/messages/:id", messagesController.showByUser);
 
 export { routes };
