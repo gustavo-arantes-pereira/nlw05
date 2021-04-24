@@ -1,3 +1,4 @@
+import { Socket } from "socket.io";
 import { getCustomRepository, Repository } from "typeorm";
 import { Connection } from "../entities/Connection";
 import { ConnectionsRepository } from "../repositories/ConnectionsRepository";
@@ -42,6 +43,12 @@ class ConnectionsService {
         })
 
         return connections;
+    }
+
+    async findBySocketID(socket_id: string) {
+        const connection = await this.connectionsRepository.findOne({ socket_id });
+
+        return connection;
     }
 }
 
